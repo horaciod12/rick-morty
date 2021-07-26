@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Pagination, Row, Col, Card } from "antd";
+import { Pagination, Row, Col, Card, Input } from "antd";
 
 import "antd/dist/antd.css";
 import "./App.css";
 
 const pageSize = 15;
-const { Meta } = Card;
+
 const App = () => {
   const [characters, setCharacters] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -58,7 +58,7 @@ const App = () => {
 
   useEffect(() => {
     const results = characters.filter((character) =>
-      character.name.toLowerCase().includes(searchTerm)
+      character.location.name.toLowerCase().includes(searchTerm)
     );
     setSearchResults(results);
   }, [searchTerm, characters]);
@@ -73,25 +73,26 @@ const App = () => {
     setMaxIndex(page * pageSize);
   };
 
-  console.log(characters);
-
   return (
     <div className="App">
       <main>
-        <input
+        <Input
           type="text"
           placeholder="Search"
           value={searchTerm}
           onChange={handleChange}
+          style={{ maxWidth: "500px", margin: "20px" }}
         />
-        <div style={{ margin: "20px 0" }}>
-        <Pagination
-          pageSize={pageSize}
-          current={current}
-          total={searchResults.length}
-          onChange={handlePagination}
-        />
-        </div>
+        {searchResults.length > 0 && (
+          <div style={{ margin: "20px 0" }}>
+            <Pagination
+              pageSize={pageSize}
+              current={current}
+              total={searchResults.length}
+              onChange={handlePagination}
+            />
+          </div>
+        )}
         {searchResults && (
           <Row>
             {searchResults.map(
@@ -99,11 +100,16 @@ const App = () => {
                 index >= minIndex &&
                 index < maxIndex && (
                   <Col span={8} key={character.id}>
-                    <Card title={`Name: ${character.name}`} bordered={true}>
+                    <Card
+                      title={`Name: ${character.name}`}
+                      bordered={true}
+                      style={{ margin: "10px", background: "lightGrey" }}
+                    >
                       <img
                         style={{ width: "70px" }}
                         src={character.image}
                         alt={character.name}
+                        title={character.name}
                       />
                       <div>
                         <span>
