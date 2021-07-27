@@ -79,6 +79,7 @@ const App = () => {
 
   return (
     <div className="App">
+      <h2 className="Title">Rick and Morty</h2>
       <Input
         type="text"
         placeholder="Search"
