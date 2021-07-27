@@ -1,10 +1,14 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Pagination, Row, Col, Card, Input } from "antd";
+import { Input } from "antd";
+import CardList from "./components/CardList/CardList";
+import PaginationCmp from "./components/PaginationCmp/PaginationCmp";
 
 import "antd/dist/antd.css";
 import "./App.css";
 
 const pageSize = 15;
+
+const inputStyles = { maxWidth: "500px", margin: "20px" };
 
 const App = () => {
   const [characters, setCharacters] = useState([]);
@@ -75,75 +79,26 @@ const App = () => {
 
   return (
     <div className="App">
-      <main>
-        <Input
-          type="text"
-          placeholder="Search"
-          value={searchTerm}
-          onChange={handleChange}
-          style={{ maxWidth: "500px", margin: "20px" }}
-        />
-        {searchResults.length > 0 && (
-          <div style={{ margin: "20px 0" }}>
-            <Pagination
-              pageSize={pageSize}
-              current={current}
-              total={searchResults.length}
-              onChange={handlePagination}
-            />
-          </div>
-        )}
-        {searchResults && (
-          <Row>
-            {searchResults.map(
-              (character, index) =>
-                index >= minIndex &&
-                index < maxIndex && (
-                  <Col span={8} key={character.id}>
-                    <Card
-                      title={`Name: ${character.name}`}
-                      bordered={true}
-                      style={{ margin: "10px", background: "lightGrey" }}
-                    >
-                      <img
-                        style={{ width: "70px" }}
-                        src={character.image}
-                        alt={character.name}
-                        title={character.name}
-                      />
-                      <div>
-                        <span>
-                          <b>Status:</b>{" "}
-                        </span>
-                        <span>{character.status}</span>
-                      </div>
-                      <div>
-                        <span>
-                          <b>Species:</b>{" "}
-                        </span>
-                        <span>{character.species}</span>
-                      </div>
-                      <div>
-                        <span>
-                          <b>Location name:</b>{" "}
-                        </span>
-                        <span>{character.location.name}</span>
-                      </div>
-                      <div>
-                        <span>
-                          <b>Origin name:</b>{" "}
-                        </span>
-                        <span>{character.origin.name}</span>
-                      </div>
-                    </Card>
-                  </Col>
-                )
-            )}
-          </Row>
-        )}
-        {isLoading && <p>Loading...</p>}
-        {error && <p>{error}</p>}
-      </main>
+      <Input
+        type="text"
+        placeholder="Search"
+        value={searchTerm}
+        onChange={handleChange}
+        style={inputStyles}
+      />
+      <PaginationCmp
+        pageSize={pageSize}
+        current={current}
+        searchResults={searchResults}
+        onHandlePagination={handlePagination}
+      />
+      <CardList
+        searchResults={searchResults}
+        maxIndex={maxIndex}
+        minIndex={minIndex}
+      />
+      {isLoading && <p>Loading...</p>}
+      {error && <p>{error}</p>}
     </div>
   );
 };
